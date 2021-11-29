@@ -13,4 +13,5 @@ Il n'y a qu'un seul boutton pour récupérer le ou les gagnants; il utilise la f
 Le contrat est commenter en suivant NatSpec. </br>
 La documentation est générée avec solc, pour les dev et utilisateurs.
 L'app récupère les events dont les valeurs sont utilisées pour les messages d'alerte.
+Les tests fonctionnent comme dans le défi 2.
 
