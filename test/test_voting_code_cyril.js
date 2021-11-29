@@ -269,51 +269,10 @@ contract('test_code_cyril_voting', async function(accounts) {
     }); // end setVote()
 
     /**
-     * The following function test the tallyVotes function.
-     * STEPS:
-     * call from voter
-        * should revert - onlyOwner
-     * change state
-        * check state changed
-     *  call from owner
-        * should emit the workflowStatusChange event
-     * winner should be as expected
-     */
-    describe('tallyVotes()', function () {
-       describe('transaction from voter', function () {
-           it('should revert - onlyOwner', async function () {
-               await expectRevert(votingInstance.tallyVotes({from: voters[1]}), "Ownable: caller is not the owner")
-           })
-       })
-       describe('transaction startVotingSession()', function () {
-            changeWorkflowStatus(
-                4, 
-                'VotingSessionEnded'
-            );  
-        })
-       describe('transaction from owner', function () {
-            it('workflowStatus should be at votingSessionEnded', async function () {
-                const _currentState = Number(await votingInstance.workflowStatus());
-                    expect(_currentState).to.equal(4, 'wrong state');
-            });
-            it('state has changed to VotesTallied', async function () {
-                const tx = await votingInstance.tallyVotes({from: owner});
-                assert.ok(tx);
-                const _previousState = Number(await votingInstance.workflowStatus());
-                expectEvent(tx, 'WorkflowStatusChange', _previousState, 5);
-            })
-            it('winner should be proposal 0', async function () {
-                const winner = await votingInstance.getWinner();
-                expect(winner.description).to.equal("NEAR Protocol")
-            })
-       }) //end transaction from owner
-    })//end tallyVotes()
-
-    /**
      * The following function test the tallyVotesDraw function
      * The code add 2 proposals with 2 votes each.
      */
-    describe('tallyVotesDraw()', function () {
+    describe('countVotes()', function () { //tallyVotesDraw
         it('the two winners are the ones as expected', async function () {
             //register voters
             for (const _voterAddress of Object.values(voters)) {
@@ -349,7 +308,7 @@ contract('test_code_cyril_voting', async function(accounts) {
             });
             await votingInstanceDrawScenario.endVotingSession({from: owner});
             //count votes
-            await votingInstanceDrawScenario.tallyVotesDraw({gas: 2000000,from: owner}); // had to add some gas values or error: out of gas
+            await votingInstanceDrawScenario.countVotes({gas: 2000000,from: owner}); // had to add some gas values or error: out of gas
             //get the two winners
             const winners = await votingInstanceDrawScenario.getWinners();
             expect(winners[0].description, winners[0].voteCount).to.equal('NEAR Protocol','2');
