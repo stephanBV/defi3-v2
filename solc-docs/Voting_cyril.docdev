@@ -1,0 +1,97 @@
+{
+  "author": "Cyril ",
+  "kind": "dev",
+  "methods":
+  {
+    "addProposal(string)":
+    {
+      "details": "allows the caller to add a proposalonly voters can make that transactionemit ProposalRegistered event ",
+      "params":
+      {
+        "_desc": "{string} - the proposal's description"
+      }
+    },
+    "addVoter(address)":
+    {
+      "details": "allows the caller to register a voteronly admin can make that transactionemit VoterRegistered event ",
+      "params":
+      {
+        "_addr": "{address} - the voter's address"
+      }
+    },
+    "countVotes()":
+    {
+      "details": "allows the caller to count the votesonly admin can make that transactionemit WorkflowStatusChange event "
+    },
+    "endProposalsRegistering()":
+    {
+      "details": "allows the caller to end the proposal registeringonly admin can make that transactionemit WorkflowStatusChange event "
+    },
+    "endVotingSession()":
+    {
+      "details": "allows the caller to end the voting sessiononly admin can make that transactionemit WorkflowStatusChange event "
+    },
+    "getOneProposal(uint256)":
+    {
+      "details": "allows the caller to retrieve a proposal from its id",
+      "params":
+      {
+        "_id": "{uint} - the proposal id"
+      },
+      "returns":
+      {
+        "_0": "Voter's struct data in memory"
+      }
+    },
+    "getVoter(address)":
+    {
+      "details": "allows the caller to get info about a voteronly voters can call that function",
+      "params":
+      {
+        "_addr": "{address} is the voter's address"
+      },
+      "returns":
+      {
+        "_0": "Voter's struct data in memory"
+      }
+    },
+    "getWinners()":
+    {
+      "details": "allows the caller to retrieve the winning proposals ",
+      "returns":
+      {
+        "_0": "an array of all winners in case of draw"
+      }
+    },
+    "owner()":
+    {
+      "details": "Returns the address of the current owner."
+    },
+    "renounceOwnership()":
+    {
+      "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+    },
+    "setVote(uint256)":
+    {
+      "details": "allows the caller to voteonly voters can make that transactionemit Voted event ",
+      "params":
+      {
+        "_id": "{uint} - the proposal's description"
+      }
+    },
+    "startProposalsRegistering()":
+    {
+      "details": "allows the caller to start the proposal registeringonly admin can make that transactionemit WorkflowStatusChange event "
+    },
+    "startVotingSession()":
+    {
+      "details": "allows the caller to start the voting sessiononly admin can make that transactionemit WorkflowStatusChange event "
+    },
+    "transferOwnership(address)":
+    {
+      "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+    }
+  },
+  "title": "A contract for proposals' voting  ",
+  "version": 1
+}

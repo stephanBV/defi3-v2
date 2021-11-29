@@ -1,12 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
-// import "./App.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+//|::: Libraries for setup :::|
 import Web3 from "web3";
 import detectEthereumProvider from '@metamask/detect-provider'
 import { loadContract } from "./utils/load-contract";
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown'
-import 'bootstrap/dist/css/bootstrap.min.css';
 
+//|::: Components :::|
+import AddVoter from './components/Add_Voter';
+import UpdateStatus from './components/Update_Status'
+import AddProposal from './components/Add_Proposal'
+import VoteProposal from './components/Vote_Proposal'
+import Getter from './components/Getters'
+import TallyVotes from './components/Tally_Votes'
 
 function App() {
   const [myWeb3Api, setMyWeb3Api] = useState({
@@ -20,9 +26,17 @@ function App() {
   const [account, setAccount] = useState(null)
   const [shouldReload, reload] = useState(false)
   const [workflowStatus, setWorkflowStatus] = useState(null)
+  const [admin, setAdmin] = useState(null)
+  const currentStatus = {
+    0 : "RegisteringVoters",
+    1 : "ProposalsRegistrationStarted",
+    2 : "ProposalsRegistrationEnded",
+    3 : "VotingSessionStarted",
+    4 : "VotingSessionEnded",
+    5 : "VotesTallied"
+    }
 
   const canConnectToContract = account && myWeb3Api.contract
-  const reloadEffect = useCallback(() => reload(!shouldReload), [shouldReload])
 
   const setAccountListener = provider => {
     provider.on("accountsChanged", _ => window.location.reload())
@@ -31,12 +45,11 @@ function App() {
 
   useEffect(() => {
     const loadProvider = async () => {
-      console.log('1- in loadProvider')
       const provider = await detectEthereumProvider()
 
       if (provider) {
-        const contract = await loadContract("Voting_cyril", provider)
         setAccountListener(provider)
+        const contract= await loadContract("Voting_cyril", provider)
         setMyWeb3Api({
           web3: new Web3(provider),
           provider,
@@ -54,90 +67,39 @@ function App() {
 
   useEffect(() => {
     const getAccount = async () => {
-      console.log('2- in getAccount')
-      const { web3 } = myWeb3Api
-      const accounts = await web3.eth.getAccounts()
-      const checkSumAddress = web3.utils.toChecksumAddress(accounts[0])
+      const _web3  = myWeb3Api.web3
+      const accounts = await _web3.eth.getAccounts()
+      const checkSumAddress = _web3.utils.toChecksumAddress(accounts[0]) 
+      console.assert(_web3.utils.checkAddressChecksum(checkSumAddress), "checksum test failed") //check the address passed the checksum test
       setAccount(checkSumAddress)
     }
-
     myWeb3Api.web3 && getAccount()
-  }, [myWeb3Api])
+  }, [myWeb3Api.web3])
 
   useEffect(() => {
     const loadBalance = async () => {
-      console.log('3- in loadBalance')
-      console.log('account', account)
-      const { web3 } = myWeb3Api
-      console.log('web3',web3)
-      const balance = await web3.eth.getBalance(account)
-      setBalance(web3.utils.fromWei(balance, "ether"))
+      const _web3  = myWeb3Api.web3
+      const balance = await _web3.eth.getBalance(account)
+      setBalance(_web3.utils.fromWei(balance, "ether"))
     }
-
-    myWeb3Api.web3 && loadBalance()
-  }, [myWeb3Api, shouldReload, account])
+    myWeb3Api.web3 && account && loadBalance()
+  }, [myWeb3Api.web3, shouldReload, account])
 
   useEffect(() => {
     const loadWorkflowStatus = async () => {
-    const { contract } = myWeb3Api
-    console.log('4- in loadWorkflowStatus')
-    console.log('contract',contract)
-    const status = await contract.workflowStatus()
+    const _contract  = myWeb3Api.contract
+    const status = await _contract.methods.workflowStatus().call()
     setWorkflowStatus(Number(status))
+    const admin = await _contract.methods.owner().call();
+    setAdmin(admin)
     }
-    myWeb3Api.web3 && loadWorkflowStatus()
-  },[myWeb3Api, shouldReload])
-
-  const currentStatus = (status) => {
-    switch (status) {
-      case 0:
-        return "RegisteringVoters"
-      case 1:
-        return "ProposalsRegistrationStarted"
-      case 2: 
-        return "ProposalsRegistrationEnded"
-      case 3:
-        return "VotingSessionStarted"
-      case 4:
-        return "VotingSessionEnded"
-      case 5:
-        return "VotesTallied"
-    }
-  }
-
-  const updateStatus = (status) => {
-    const owner = myWeb3Api.contract.owner()
-    console.log('in updateStatus',owner)
-    console.log(status)
-    // switch (status) {
-    //   // case 1: await myWeb3Api.contract.startProposalsRegistering({from: owner})
-    // }
-  }
-
-  
-
-  const addFunds = useCallback(async () => {
-    const { contract, web3 } = myWeb3Api
-    await contract.addFunds({
-      from: account,
-      value: web3.utils.toWei("1", "ether")
-    })
-
-    reloadEffect()
-  }, [myWeb3Api, account, reloadEffect])
-
-  const withdraw = async () => {
-    const { contract, web3 } = myWeb3Api
-    const withdrawAmount = web3.utils.toWei("0.1", "ether")
-    await contract.withdraw(withdrawAmount, {
-      from: account
-    })
-    reloadEffect()
-  }
+    myWeb3Api.contract && loadWorkflowStatus()
+  },[myWeb3Api.contract, shouldReload])
 
   return (
     <>
-      <div className="defi3-wrapper">
+      <div className="defi3-wrapper" style={{display: 'flex',  justifyContent:'center', alignItems:'center',
+        height: '30rem'}}>
         <div className="defi3">
           { myWeb3Api.isProviderLoaded ?
             <div className="is-flex is-align-items-center">
@@ -179,24 +141,15 @@ function App() {
             Current Balance: <strong>{balance}</strong> ETH
           </div>
           <div className="workflowStatus-view is-size-2 my-4">
-            Ongoing Workflow Status: {workflowStatus}-{currentStatus(workflowStatus)}
+            Ongoing Workflow Status: {workflowStatus}-{currentStatus[workflowStatus]}
           </div>
-          <DropdownButton id="dropdown-basic-button" title="Update Voting Status">
-            <Dropdown.Item href="#/action-1" onClick={() => updateStatus(1)}>Start Proposals Registering</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">End Proposals Registering</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Start Voting Session</Dropdown.Item>
-            <Dropdown.Item href="#/action-1">End Voting Session</Dropdown.Item>
-          </DropdownButton>
-          <button
-            disabled={!canConnectToContract}
-            onClick={addFunds}
-            className="button is-link mr-2">
-              Donate 1 eth
-            </button>
-          <button
-            disabled={!canConnectToContract}
-            onClick={withdraw}
-            className="button is-primary">Withdraw 0.1 eth</button>
+          <UpdateStatus  instance={myWeb3Api.contract} admin={admin} setWorkflowStatus={(ws) => setWorkflowStatus(ws)} workflowStatus={workflowStatus}/>
+          <div style={{marginBottom: '0.8rem'}}></div>
+          <AddVoter instance={myWeb3Api.contract} admin={admin} workflowStatus={workflowStatus}/>
+          <AddProposal instance={myWeb3Api.contract} voter={account} workflowStatus={workflowStatus}/>
+          <VoteProposal instance={myWeb3Api.contract} voter={account} workflowStatus={workflowStatus}/>
+          <TallyVotes instance={myWeb3Api.contract} admin={admin} setWorkflowStatus={(ws) => setWorkflowStatus(ws)} workflowStatus={workflowStatus}/>
+          <Getter instance={myWeb3Api.contract} voter={account} workflowStatus={workflowStatus}/>
         </div>
       </div>
     </>
