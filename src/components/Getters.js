@@ -20,7 +20,7 @@ function Getter(props) {
         setInputPropId(event.target.value)
     };
 
-    // custom map function for object from the getter of the getWinners function (previously TallyVotesDraw)
+    // custom map function for object from the getter of the countVotes function (previously TallyVotesDraw)
     const map = (obj, fun) =>
         Object.entries(obj).reduce(
             (prev, [key, value]) => ({
