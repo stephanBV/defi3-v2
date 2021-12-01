@@ -1,6 +1,6 @@
 const { BN, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { expect, assert } = require('chai');
-const votingAbstraction = artifacts.require('src/contracts/Voting_cyril');
+const votingAbstraction = artifacts.require('public/contracts/Voting_cyril');
 
 contract('test_code_cyril_voting', async function(accounts) { 
 
