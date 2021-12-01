@@ -33,6 +33,7 @@ Or on Ropsten:
 add a .env file and add your INFURA_ID and wallet MNEMONIC
 then: </br>
 ```truffle migrate --network ropsten```
+
 *Note: Be sure to position on the same directory as your truffle-config file, truffle won't get your mnemonic*
 
 Finally:
