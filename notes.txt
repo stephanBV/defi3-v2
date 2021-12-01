@@ -40,10 +40,3 @@ change ownable import to: import "node_modules/@openzeppelin/contracts/access/Ow
 solc -o ./solc-docs --devdoc contracts/voting_cyril.sol 
 --> see in solc-doc/ to get the docs
 also see https://github.com/CesiumGS/wetzel#reference-example to convert json to markdown doc
-
-Voters addresses :
-0x8AB4CBE82eFE7Eae2daDDD0436D333AFb3749f10
-0x9405ca670fde9665C0BA24465c6799818A0F575F
-0x6DF6922EA0e81150Df87C43AD511AF9357eDDee1
-
-intact bacon stamp convince piano wise seminar enough doctor crash solve arrest
