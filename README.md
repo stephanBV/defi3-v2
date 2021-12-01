@@ -22,7 +22,7 @@ truffle compile
 truffle migrate 
 truffle test
 ```
-All test good? then:
+All tests good? then:
 ```
 npm start
 ```
