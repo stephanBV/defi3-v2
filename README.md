@@ -20,9 +20,13 @@ Les tests fonctionnent comme dans le défi 2, mis a jour pour nouvelle fonction 
 ```
 npm install
 truffle compile
-truffle migrate 
-truffle test
+truffle migrate (Ganache)
 ```
+or
+```truffle migrate --network ropsten```
+
+Test with:
+```truffle test```
 All tests good? then:
 ```
 npm start
