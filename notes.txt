@@ -3,7 +3,7 @@ cd defi3
 
 truffle init
 truffle-config.js:
-    --> added: contracts_build_directory: "./public/contracts",
+    --> added: contracts_build_directory: "src/contracts",
     --> changed compiler to ">=0.8.7"
     --> development port 8545
 
