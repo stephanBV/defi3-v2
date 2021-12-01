@@ -31,7 +31,7 @@ truffle migrate
 ```
 Or on Ropsten:
 add a .env file and add your INFURA_ID and wallet MNEMONIC
-then:
+then: </br>
 ```truffle migrate --network ropsten```
 
 Finally:
