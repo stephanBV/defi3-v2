@@ -20,14 +20,21 @@ Les tests fonctionnent comme dans le défi 2, mis a jour pour nouvelle fonction 
 ```
 npm install
 truffle compile
-truffle migrate (Ganache)
 ```
-or
-```truffle migrate --network ropsten```
-
 Test with:
 ```truffle test```
 All tests good? then:
+
+Either deploy on Ganache:
+```
+truffle migrate
+```
+Or on Ropsten:
+add a .env file and add your INFURA_ID and wallet MNEMONIC
+then:
+```truffle migrate --network ropsten```
+
+Finally:
 ```
 npm start
 ```
