@@ -15,3 +15,15 @@ La documentation est générée avec solc, pour les dev et utilisateurs.
 L'app récupère les events dont les valeurs sont utilisées pour les messages d'alerte.
 Les tests fonctionnent comme dans le défi 2.
 
+#### Set up ###
+```
+npm install
+truffle compile
+truffle migrate 
+truffle test
+```
+All test good? then:
+```
+npm start
+```
+
