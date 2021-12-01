@@ -1,10 +1,10 @@
-
+const path = require("path");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 require('dotenv').config();
 // require('dotenv').config({ path: '~/Users/urdoom/Alyra/truffle/.env', encoding: 'latin1' });
 
 module.exports = {
-
+  contracts_build_directory: path.join(__dirname, "src/contracts"),
 
   networks: {
     development: {
